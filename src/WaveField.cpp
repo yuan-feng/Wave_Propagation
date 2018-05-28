@@ -33,7 +33,7 @@ int WaveField::set_motion_depth(double motion_depth
 	}
 	_motion_depth = motion_depth * depth_unit_scale;
 
-	if( fabs(_motion_depth) > machina_epsilon  && !_soil_Vs.empty()){
+	if( std::fabs(_motion_depth) > machina_epsilon  && !_soil_Vs.empty()){
 		this->add_compute_depth(_motion_depth);
 	}
 	return 1;
@@ -213,7 +213,7 @@ int WaveField::set_soil_profile(vector<double> const& Vs
 		cerr << " thick.size() = " << thick.size() << "\n" ;
 		return -1;
 	}
-	if (fabs(thick[0]) < machina_epsilon){
+	if (std::fabs(thick[0]) < machina_epsilon){
 		cerr << " ERROR!!! in WaveField::set_soil_profile. The first thickness cannot be zero! \n";
 		cerr << " thick[0] = " << thick[0] <<endl;
 		return -1;
@@ -237,7 +237,7 @@ int WaveField::set_soil_profile(vector<double> const& Vs
 		_soil_depth[i] = _soil_thick[i] + _soil_depth[i-1];
 	}
 	_soil_depth.insert(_soil_depth.begin(), 0);
-	if(fabs(_motion_depth) > machina_epsilon ){
+	if(std::fabs(_motion_depth) > machina_epsilon ){
 		this->add_compute_depth(_motion_depth);
 	}
 	return 1;
@@ -318,7 +318,7 @@ int WaveField::add_compute_depth(double new_depth){
 	// DEBUG_MSG(" WaveField::add_compute_depth new_depth = " << new_depth) ; 
 	// cerr <<" WaveField::add_compute_depth new_depth = " << new_depth ; 
 	for (auto d: _soil_depth){
-		if ( fabs(new_depth - d) <= SOILD_THICKNESS_TOLERANCE )	{
+		if ( std::fabs(new_depth - d) <= SOILD_THICKNESS_TOLERANCE )	{
 			// cout<<"hi" <<endl;
 			// print_vec<double>("_soil_Vs ", _soil_Vs);
 			// print_vec<double>("_soil_rho ", _soil_rho);
@@ -615,7 +615,7 @@ WaveField::deconvolution2bedrock(){
 	vector<double> rock_damp = {_soil_damp.back(), _soil_damp.back(), _soil_damp.back()}  ;
 	vector<double> rock_thick(2,0.) ;
 
-	if( fabs(_motion_depth) > machina_epsilon ){
+	if( std::fabs(_motion_depth) > machina_epsilon ){
 		rock_thick = {_motion_depth , _soil_depth.back() - _motion_depth } ;
 	}else{
 		rock_thick = {_soil_depth.back() / 2. , _soil_depth.back() - _soil_depth.back() / 2. }; 
@@ -640,7 +640,7 @@ WaveField::deconvolution2bedrock(){
 	this->fft(input_acc_freq);
 
 	int motion_layer = 0 ;
-	if( fabs(_motion_depth) > machina_epsilon ){
+	if( std::fabs(_motion_depth) > machina_epsilon ){
 		motion_layer = 1;
 	}else{
 		motion_layer = 0;
@@ -711,7 +711,7 @@ WaveField::time2freq(double dt, vector<double> const& series){
 	this->fft(series_complex);
 	vector<double> full_freqs(len);
 	for (int i = 0; i < len; ++i){
-		full_freqs[i] = fabs(series_complex[i])/len ;
+		full_freqs[i] = std::fabs(series_complex[i])/len ;
 	}
 	int Nfreq = len/2 + 1 ; 
 	vector<double> mag_of_half_freqs(full_freqs.begin(), full_freqs.begin()+Nfreq);
@@ -847,7 +847,7 @@ void WaveField::setTag(int newTag){
 }
 
 int WaveField::depth2layer(double depth){
-	depth = fabs(depth) ;
+	depth = std::fabs(depth) ;
 	auto it = lower_bound(_soil_depth.begin(), _soil_depth.end(), depth);
 	if ( *it - depth > SOILD_THICKNESS_TOLERANCE ){
 		if(depth<0){

@@ -7,9 +7,15 @@ INCLUDE_HEADER_LOCATION=\
 -I../../src/ \
 -I../../utils/
 
-test_deconvolution: test_deconvolution.cpp ${SRC}
-	$(CC) -o test_deconvolution.out test_deconvolution.cpp ${CXXFLAGS} ${SRC} ${INCLUDE_HEADER_LOCATION}
+compile: test_incident_wave_convolution.cpp ${SRC}
+	$(CC) -o test_incident_wave_convolution.out test_incident_wave_convolution.cpp ${CXXFLAGS} ${SRC} ${INCLUDE_HEADER_LOCATION}
+
+run:
+	./test_incident_wave_convolution.out
+
+plot:
+	python plot_convolution.py 
 
 clean:
-	rm -f test_deconvolution.out
+	rm -f test_incident_wave_convolution.out
 	rm -f wave_at_depth_*.txt
