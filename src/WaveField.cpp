@@ -54,7 +54,7 @@ int WaveField::set_motions(
 	    cerr << " - could not open acceleration file: " << filename_acc << endl;
 	    return -1;
 	}
-	string word; 
+	double word = 0. ; 
 	int count = 0;
 	vector<double> times, acceleration ;
 
@@ -69,9 +69,9 @@ int WaveField::set_motions(
 
 	while(ss >> word){
 		if(count&1){
-			acceleration.push_back(stof(word));
+			acceleration.push_back( word ) ;
 		}else{
-			times.push_back(stof(word));
+			times.push_back( word ) ;
 		}
 		count++;
 	}
@@ -106,7 +106,7 @@ int WaveField::set_motions(
 	vector<double> displacement ;
 	while(ssDisp >> word){
 		if(count&1){
-			displacement.push_back(stof(word));
+			displacement.push_back( word ) ;
 		}
 		count++;
 	}
@@ -150,25 +150,25 @@ int WaveField::set_soil_profile(string const& filename
 
 	// save results to vector
 	stringstream ss(cleaned_input);
-	string word, line; 
+	double word = 0. ; 
 	vector<double> Vs, rho, damp, thickness;
 	int count = 0;
 	while(ss >> word){
 		switch ( (count++)%4 ){
 			case 0 :{
-				Vs.push_back(stof(word));
+				Vs.push_back( word ) ;
 				break;
 			}
 			case 1:{
-				rho.push_back(stof(word));
+				rho.push_back( word ) ;
 				break;
 			}
 			case 2 :{
-				damp.push_back(stof(word));
+				damp.push_back( word ) ;
 				break;
 			}
 			case 3:{
-				thickness.push_back(stof(word));
+				thickness.push_back( word ) ;
 				break;
 			}
 		}
